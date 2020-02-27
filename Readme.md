@@ -8,7 +8,7 @@ Please fill in your name and student id:
 | ----------- | ---------- | ----------- |
 |             |            |             |
 
-For a more readable version of this document, see [Readme.pdf](Readme.pdf) or [Readme.html](Readme.html).
+For a more readable version of this document, see [Readme.pdf](Readme.pdf).
 
 **Deadline:** March 12th 2020, 12pm. Only commits ***pushed*** to github before this date and time will be considered for grading.
 
