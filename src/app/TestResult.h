@@ -7,7 +7,10 @@
 
 #include <Eigen/Core>
 
-//#include <mathLib/Tensors.h>
+#ifdef WIN32
+#define NOMINMAX
+#include <Windows.h>
+#endif
 
 namespace tests {
 

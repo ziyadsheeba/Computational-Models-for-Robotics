@@ -1,6 +1,9 @@
 ﻿#ifdef WIN32
 #define NOMINMAX
+#define _USE_MATH_DEFINES
+#include <cmath>
 #endif
+
 #include <application.h>
 #include <imgui.h>
 #include <imgui_multiplot.h>
@@ -16,6 +19,7 @@
 #include <deque>
 #include <chrono>
 #include <algorithm>
+#include <math.h>
 
 #include <Eigen/Core>
 using Eigen::Vector2f;
@@ -144,13 +148,13 @@ public:
             if(Checkbox("show contour edges", &plot.showContourEdges)){
                 generatePlot();
             }
-            EndMenu();
+            ImGui::EndMenu();
         }
         if(BeginMenu("Minimizer Settings")){
             const double smin = 0.0, smax = 1.0;
             SliderScalar("GD Fixed: step size", ImGuiDataType_Double, &gdFixed.stepSize, &smin, &smax);
             InputDouble("Newton: regularizer", &newton.reg);
-            EndMenu();
+            ImGui::EndMenu();
         }
         EndMainMenuBar();
 

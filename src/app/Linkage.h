@@ -1,4 +1,5 @@
 ﻿#include <Eigen/Core>
+#include <array>
 #include <ObjectiveFunction.h>
 
 using Eigen::Vector2d;

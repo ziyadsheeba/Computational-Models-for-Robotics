@@ -183,13 +183,13 @@ public:
             if(Checkbox("show contour edges", &plot.showContourEdges)){
                 generatePlot();
             }
-            EndMenu();
+            ImGui::EndMenu();
         }
         if(BeginMenu("Minimizer Settings")){
             const double smin = 0.0, smax = 1.0;
             SliderScalar("GD Fixed: step size", ImGuiDataType_Double, &gdFixed.stepSize, &smin, &smax);
             InputDouble("Newton: regularizer", &newton.reg);
-            EndMenu();
+            ImGui::EndMenu();
         }
         EndMainMenuBar();
 
