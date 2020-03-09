@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 #include "ObjectiveFunction.h"
 #include "Minimizer.h"
 
@@ -46,7 +46,7 @@ protected:
         //////////////////// 1.2
 
         // your code goes here
-
+        x = x - stepSize*dx;
         //////////////////// 1.2
     }
 
@@ -69,10 +69,17 @@ public:
 protected:
     virtual void step(const ObjectiveFunction *function, const VectorXd& dx, VectorXd& x)
     {
-        //////////////////// 1.2
-
-        // your code goes here
-
+        double alpha = 0.3; // Must be in the range of (0, 0.5) according  to Stephen Boyd/Lieven Vandenberghe
+        double beta = 0.7; //Must be in the range of(0, 1) according  to Stephen Boyd / Lieven Vandenberghe
+        
+    double t = 1;
+        int iter = 0;
+        while ((iter < maxLineSearchIterations) && (function->evaluate(x + t * dx) > (function->evaluate(x) + alpha * t * (dx.transpose()) * dx)))
+        {
+            t = beta * t;
+            iter++;
+        }
+        x = x - t * dx;
         //////////////////// 1.2
     }
 

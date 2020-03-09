@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Minimizer.h"
-
 #include <random>
 
 class RandomMinimizer : public Minimizer
@@ -19,16 +18,22 @@ public:
     virtual ~RandomMinimizer() {}
 
     virtual bool minimize(const ObjectiveFunction *function, VectorXd &x) {
+        
+        double a;
+        fBest = function->evaluate(x);
+        xBest = x;
         for (int i = 0; i < iterations; ++i) {
 
-            // generate a random number in [0, 1]
-            // double a = dist(rng);
-
-            ////////////////////////////////////// 1.1
-
-            // your code goes here
-
-            ////////////////////////////////////// 1.1
+            //Element wise rescaling of the random variable from between [0,1] to [min,max]
+            for (int j = 0; j < x.size(); j++) {
+                a = dist(rng);
+                x[j] = (searchDomainMax[j] - searchDomainMin[j]) * a + searchDomainMin[j];
+            }
+            if (function->evaluate(x) < fBest)
+            {
+                xBest = x;
+                fBest = function->evaluate(x);
+            }
         }
         return false;
     }

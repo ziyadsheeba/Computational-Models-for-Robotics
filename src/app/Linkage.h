@@ -20,7 +20,9 @@ struct Linkage
 
         // your code goes here
         // compute p1 and p2!
-
+        p1 << (length[0]*cos(angles[0])), (length[0]*sin(angles[0]));
+        p2 << (length[0] * cos(angles[0]) + length[1] * cos(angles[0] + angles[1]))
+            , (length[0] * sin(angles[0]) + length[1] * sin(angles[0] + angles[1]));
         //////////////////// 2.1
         return {p0, p1, p2};
     }
@@ -32,9 +34,9 @@ struct Linkage
         //////////////////// 2.2
 
         // your code goes here
-
+        dp2_dangles << -length[0] * sin(angles[0]) - length[1] * sin(angles[0] + angles[1]), -length[1] * sin(angles[0] + angles[1]),
+            length[0] * cos(angles[0]) + length[1] * cos(angles[0] + angles[1]), length[1] * cos(angles[0] + angles[1]);
         //////////////////// 2.2
-
         return dp2_dangles;
     }
 
@@ -47,9 +49,12 @@ struct Linkage
 
         // your code goes here
 
+        tensor[0] << -length[0] * cos(angles[0]) - length[1] * cos(angles[1] + angles[0]), -length[1] * cos(angles[1] + angles[0]),
+                     -length[0] * sin(angles[0]) - length[1] * sin(angles[1] + angles[0]), -length[1] * sin(angles[1] + angles[0]);
+        
+        tensor[1] << -length[1] * cos(angles[1] + angles[0]), -length[1] * cos(angles[0] + angles[1]),
+                     -length[1] * sin(angles[1] + angles[0]), -length[1] * sin(angles[1] + angles[0]);
         //////////////////// 2.3
-
-
         return tensor;
     }
 };
@@ -69,7 +74,9 @@ public:
         // your code goes here
 
         //////////////////// 2.1
-
+        Vector2d current_position = linkage->fk(x)[2];
+        Vector2d error = current_position - *target;
+        e = 0.5*error.transpose() * error;
         return e;
     }
     void addGradientTo(const VectorXd& x, VectorXd& grad) const override {
@@ -78,6 +85,7 @@ public:
         // your code goes here
 
         //////////////////// 2.2
+        grad = grad + (linkage->dfk_dangles(x)).transpose() * (linkage->fk(x)[2] -  *target);
     }
 
     Matrix2d hessian(const VectorXd &x) const {
@@ -88,6 +96,13 @@ public:
         // your code goes here
 
         //////////////////// 2.3
+        Matrix2d J = linkage->dfk_dangles(x);
+        Tensor2x2x2 dJ = linkage->ddfk_ddangles(x);
+        Vector2d  currentPosition = linkage->fk(x)[2];
+        Matrix2d  tensorProd = Matrix2d::Zero();
+        tensorProd.col(0) = dJ[0].transpose() * (currentPosition - *target);
+        tensorProd.col(1) = dJ[1].transpose() * (currentPosition - *target);
+        hess = J.transpose() * J + tensorProd;
 
         return hess;
     }

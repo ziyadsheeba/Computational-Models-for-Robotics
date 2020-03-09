@@ -2,6 +2,7 @@
 
 #include "ObjectiveFunction.h"
 #include "GradientDescentMinimizer.h"
+#include <iostream>
 
 class NewtonFunctionMinimizer : public GradientDescentLineSearch {
 public:
@@ -13,11 +14,15 @@ public:
 protected:
     virtual void computeSearchDirection(const ObjectiveFunction *function, const VectorXd &x, VectorXd& dx) {
 
-        //////////////////// 1.3
 
-        // your code goes here
-
-        //////////////////// 1.3
+        Eigen::SimplicialLDLT<SparseMatrixd, Eigen::Lower> solver;
+        SparseMatrixd Eye(x.size(), x.size());
+        Eye.setIdentity();
+        function->getHessian(x, hessian);
+        dx = function->getGradient(x);
+        hessian = hessian + reg * Eye;
+        solver.compute(hessian);
+        dx = solver.solve((dx));
     }
 
 public:
